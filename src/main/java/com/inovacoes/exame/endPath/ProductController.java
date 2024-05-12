@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResourceAccessException;
 
-import com.inovacoes.exame.model.ProductModel;
+import com.inovacoes.exame.model.Productmodel;
 import com.inovacoes.exame.repository.ProductRepository;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -36,34 +36,34 @@ public class ProductController {
 	// CRUD
 	// create
 	@PostMapping(path="/create",consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ProductModel> productCreate(@RequestBody ProductModel product) {
-		return new ResponseEntity<ProductModel>(productService.save(product),
+	public ResponseEntity<Productmodel> productCreate(@RequestBody Productmodel product) {
+		return new ResponseEntity<Productmodel>(productService.save(product),
 				HttpStatus.CREATED);
 	}
 	// get
 	@GetMapping(path="/get/{id}")
-	public ResponseEntity<Optional<ProductModel>> productGet(@PathVariable Long id) {
-		return new ResponseEntity<Optional<ProductModel>>(productService.findById(id),
+	public ResponseEntity<Optional<Productmodel>> productGet(@PathVariable Long id) {
+		return new ResponseEntity<Optional<Productmodel>>(productService.findById(id),
 				HttpStatus.ACCEPTED);
 	}
 	//getall
 	@GetMapping(path="/get")
-	public ResponseEntity<List<ProductModel>> productGetAll(){
-		return new ResponseEntity<List<ProductModel>>(productService.findAll(),
+	public ResponseEntity<List<Productmodel>> productGetAll(){
+		return new ResponseEntity<List<Productmodel>>(productService.findAll(),
 				HttpStatus.ACCEPTED);
 	}
 	// update
 	// not tested
 	@PutMapping("/update/{id}")
-	public ResponseEntity<ProductModel> putProduct(@PathVariable Long id, @RequestBody ProductModel productBody) 
+	public ResponseEntity<Productmodel> putProduct(@PathVariable Long id, @RequestBody Productmodel productBody) 
 			throws NoSuchElementException{
-		ProductModel prodPut = productService.findById(id).orElseThrow();
+		Productmodel prodPut = productService.findById(id).orElseThrow();
 		
 		prodPut.setName(productBody.getName());
 		prodPut.setDescription(productBody.getDescription());
 		prodPut.setPrice(productBody.getPrice());
 		
-		return new ResponseEntity<ProductModel>(productService.save(prodPut),HttpStatus.ACCEPTED);
+		return new ResponseEntity<Productmodel>(productService.save(prodPut),HttpStatus.ACCEPTED);
 	}
 
 	// delete

@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.inovacoes.exame.methodObject.ProductListIDGetter;
 import com.inovacoes.exame.methodObject.QRCodeGenerator;
-import com.inovacoes.exame.model.AddedProductModel;
-import com.inovacoes.exame.model.ProductModel;
-import com.inovacoes.exame.model.PurchaseModel;
-import com.inovacoes.exame.model.UnitProductModel;
+import com.inovacoes.exame.model.Addedproductmodel;
+import com.inovacoes.exame.model.Productmodel;
+import com.inovacoes.exame.model.Purchasemodel;
+import com.inovacoes.exame.model.Unitproductmodel;
 import com.inovacoes.exame.repository.PurchaseRepository;
 
 @RestController
@@ -34,18 +34,24 @@ public class PurchaseController {
 	@Autowired
 	PurchaseRepository purchaseService;
 	
+	
 	//crud
 	//get
 	@GetMapping(path = "/list/{id}")
-	public ResponseEntity<Optional<PurchaseModel>> getPurchase(@PathVariable Long id){
-		return new ResponseEntity<Optional<PurchaseModel>>(purchaseService.findById(id),HttpStatus.OK);
+	public ResponseEntity<Optional<Purchasemodel>> getPurchase(@PathVariable Long id){
+		return new ResponseEntity<Optional<Purchasemodel>>(purchaseService.findById(id),HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/list")
+	public ResponseEntity<List<Purchasemodel>> getPurchase(){
+		return new ResponseEntity<List<Purchasemodel>>(purchaseService.findAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/list/qr/{id}", produces = MediaType.IMAGE_PNG_VALUE)
 	public ResponseEntity<List<BufferedImage>> qrcodeGetPurchase(@PathVariable Long id)
 			throws Exception,NoSuchElementException {
-		PurchaseModel purchaseBody = purchaseService.findById(id).orElseThrow();
-		List<UnitProductModel> product = purchaseBody.getAddedproduct().getUnitproduct();
+		Purchasemodel purchaseBody = purchaseService.findById(id).orElseThrow();
+		List<Unitproductmodel> product = purchaseBody.getAddedproduct().getUnitproduct();
 		List<String> codes = ProductListIDGetter.IDGetter(product);
 		System.out.println(codes);
 		return new ResponseEntity<List<BufferedImage>>(QRCodeGenerator.generateListQrcode(codes),HttpStatus.OK);
@@ -53,19 +59,19 @@ public class PurchaseController {
 	
 	//purchase
 	@PostMapping(path="/buy")
-	public ResponseEntity<PurchaseModel> postPurchase(@RequestBody PurchaseModel purchase){
-		return new ResponseEntity<PurchaseModel>(purchaseService.save(purchase),HttpStatus.OK);
+	public ResponseEntity<Purchasemodel> postPurchase(@RequestBody Purchasemodel purchase){
+		return new ResponseEntity<Purchasemodel>(purchaseService.save(purchase),HttpStatus.OK);
 	}
 	//put
 	@PutMapping("/update/{id}")
-	public ResponseEntity<PurchaseModel> putProduct(@PathVariable Long id, @RequestBody PurchaseModel productBody) 
+	public ResponseEntity<Purchasemodel> putProduct(@PathVariable Long id, @RequestBody Purchasemodel productBody) 
 			throws NoSuchElementException{
-		PurchaseModel prodPut = purchaseService.findById(id).orElseThrow();
+		Purchasemodel prodPut = purchaseService.findById(id).orElseThrow();
 		
 		prodPut.setClient(productBody.getClient());
 		prodPut.setAddedproduct(productBody.getAddedproduct());
 		
-		return new ResponseEntity<PurchaseModel>(purchaseService.save(prodPut),HttpStatus.ACCEPTED);
+		return new ResponseEntity<Purchasemodel>(purchaseService.save(prodPut),HttpStatus.ACCEPTED);
 	}
 	//cancel
 	@DeleteMapping(value = "/remove/{id}")
