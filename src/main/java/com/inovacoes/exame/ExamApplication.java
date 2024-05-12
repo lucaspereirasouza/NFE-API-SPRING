@@ -31,13 +31,4 @@ public class ExamApplication {
 	    configurer.defaultContentType(MediaType.APPLICATION_XML);
 	  }
 	}
-	
-//	@Configuration
-//	@EnableMethodSecurity(
-//	  prePostEnabled = true, 
-//	  securedEnabled = true, 
-//	  jsr250Enabled = true)
-//	public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration{
-//		
-//	}
 }
