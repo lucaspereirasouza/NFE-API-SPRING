@@ -108,7 +108,7 @@ CRUD:
 /delete/{id}
 
 Entities Diagram:
-...
+![diagram](/readmeSrc/img/diagram.png)
 
 
 ## Authors
