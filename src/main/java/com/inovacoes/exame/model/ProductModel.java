@@ -1,5 +1,8 @@
 package com.inovacoes.exame.model;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,44 +11,39 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Product")
-public class ProductModel {
+@Table(name="product")
+public class ProductModel implements Serializable{
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name="productName", length = 30,nullable = false)
 	private String name;
+	@Column(name="category",nullable=true)
+	private String category;
 	@Column(name="productDescription",nullable = false)
 	private String description;
 	@Column(name="ProductPrice",nullable = false,precision = 2)
 	private double price;
 	
-//	@JoinColumn(name="client")
-//	private ClientModel client;
-
 	public ProductModel() {
 	}
 
-	public ProductModel(Long id, String name, String description, double price) {
-	this.id = id;
-	this.name = name;
-	this.description = description;
-	this.price = price;
-}
-
-
+	public ProductModel(Long id, String name, String category, String description, double price) {
+		this.id = id;
+		this.name = name;
+		this.category = category;
+		this.description = description;
+		this.price = price;
+	}
 
 	public Long getId() {
 		return id;
 	}
 
-
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
 
 	public String getName() {
 		return name;
@@ -53,6 +51,14 @@ public class ProductModel {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getDescription() {
@@ -71,8 +77,29 @@ public class ProductModel {
 		this.price = price;
 	}
 
-	
-	
-	
+	@Override
+	public int hashCode() {
+		return Objects.hash(category, description, id, name, price);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductModel other = (ProductModel) obj;
+		return Objects.equals(category, other.category) && Objects.equals(description, other.description)
+				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price);
+	}
+
+	@Override
+	public String toString() {
+		return "ProductModel [id=" + id + ", name=" + name + ", category=" + category + ", description=" + description
+				+ ", price=" + price + "]";
+	}
 	
 }
