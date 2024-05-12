@@ -1,12 +1,11 @@
 package com.inovacoes.exame.endPath;
 
-import java.util.Collection;
 import java.util.List;
-
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,40 +18,34 @@ import com.inovacoes.exame.model.ClientModel;
 import com.inovacoes.exame.repository.ClientRepository;
 
 @RestController()
-@RequestMapping("/client")
+@RequestMapping("/v1/inovacoes/client")
+@CrossOrigin("*")
 public class ClientController {
 	@Autowired
-	ClientRepository cli;
+	ClientRepository clientService;
 	
 	//create
 	@PostMapping("/create")
-	ResponseEntity<String> createclient(@RequestBody ClientModel client){
-		System.out.println(client.getAddress());
-		cli.save(client);
-		return new ResponseEntity<String>("Sent", HttpStatus.OK);
+	ResponseEntity<ClientModel> createclient(@RequestBody ClientModel client){
+		return new ResponseEntity<ClientModel>(clientService.save(client), HttpStatus.OK);
 	}
 	
 	// get
+	
 	@GetMapping("/get/{id}")
-	ResponseEntity<ClientModel> getclient(@PathVariable Long id){
-		return new ResponseEntity<ClientModel>(cli.getReferenceById(id),HttpStatus.OK);
+	ResponseEntity<ClientModel> getclient(@PathVariable Long id) {
+		return new ResponseEntity<ClientModel>(clientService.getReferenceById(id),HttpStatus.OK);	
 	} 
 	// get all
 	@GetMapping("/get")
 	ResponseEntity<List<ClientModel>> getAllClient(){
-		return new ResponseEntity<List<ClientModel>>(cli.findAll(),HttpStatus.OK);
+		return new ResponseEntity<List<ClientModel>>(clientService.findAll(),HttpStatus.OK);
 	}
-	
-	//update
-	
-	//delete
-	@DeleteMapping("/rm/{id}")
-	ResponseEntity<String> rmclient(@PathVariable Long id){
-		cli.deleteById(id);
-		ResponseEntity<String> response = 
-				cli.existsById(id)? 
-						new ResponseEntity<String>("Not Deleted",HttpStatus.INTERNAL_SERVER_ERROR)
-						:new ResponseEntity<String>("Deleted",HttpStatus.OK);
-		return response;
+
+	@DeleteMapping("/delete/{id}")
+	ResponseEntity<Long> rmclient(@PathVariable Long id) throws NoSuchElementException{
+		clientService.findById(id).orElseThrow();
+		clientService.deleteById(id);
+		return new ResponseEntity<Long>(id,HttpStatus.ACCEPTED);
 	}
 }
