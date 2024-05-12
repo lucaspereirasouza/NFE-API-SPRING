@@ -14,10 +14,8 @@ NFe XML treater in spring boot
 
 ## Docker
 
-### archive docker-compose.yaml
-
-
-docker compose up
+#### install Docker Engine and Docker Compose, and then execute the command within the docker-compose.yaml file.
+##### docker compose up
 
 ```docker-compose
 services:
